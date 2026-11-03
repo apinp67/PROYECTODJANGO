@@ -1,0 +1,43 @@
+{% extends "base.html" %}                 {# Línea 1: "Uso el diseño de base.html" #}
+
+{% block titulo %}Inicio{% endblock %}    {# Rellena el bloque titulo → pestaña: "Inicio | Mi Tienda" #}
+
+{% block contenido %}                     {# Todo lo que sigue va en el espacio "contenido" de base.html #}
+
+    {# Portada. Clases de Bootstrap: p-5 = mucho padding, mb-4 = margen abajo, text-center = centrado #}
+    <div class="tarjeta p-5 mb-4 text-center">
+        <h1 class="display-6 fw-bold">Bienvenido a {{ titulo }}</h1>       {# display-6: título grande; fw-bold: negrita #}
+        <p class="lead text-muted mb-0">Sistema de facturación hecho con Django.</p>  {# lead: texto destacado; text-muted: gris #}
+    </div>
+
+    <div class="row g-4">                 {# row: fila de columnas. g-4: espacio entre columnas #}
+
+        <div class="col-md-6">            {# col-md-6: media fila en computadora, fila completa en celular #}
+            <div class="tarjeta h-100">   {# h-100: las dos tarjetas miden lo mismo de alto #}
+                <h2 class="h5 titulo-pagina">Prueba GET y POST</h2>
+                {% if nombre %}           {# Si llegó un nombre por POST... #}
+                    <p>Hola, <strong>{{ nombre }}</strong>. Llegó por <span class="badge bg-warning text-dark">POST</span></p>
+                {% else %}                {# ...si no, la página llegó por GET #}
+                    <p>La página llegó por <span class="badge bg-success">GET</span>. Envía tu nombre.</p>
+                {% endif %}
+                <form method="post" class="d-flex gap-2">   {# d-flex gap-2: caja y botón en fila con espacio #}
+                    {% csrf_token %}                        {# Obligatorio en formularios POST #}
+                    <input type="text" name="nombre" class="form-control" placeholder="Tu nombre">  {# form-control: estilo Bootstrap #}
+                    <button type="submit" class="btn btn-principal">Enviar</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="tarjeta h-100">
+                <h2 class="h5 titulo-pagina">Lista recorrida con un for</h2>
+                <ul class="list-group">   {# list-group: lista con estilo de Bootstrap #}
+                    {% for producto in productos %}
+                        <li class="list-group-item">{{ forloop.counter }}. {{ producto|upper }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}                            {# Fin del bloque contenido #}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block titulo %}Iniciar Sesión{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5 col-lg-4">
+        <div class="tarjeta text-center shadow-sm">
+            <h1 class="h3 mb-4 fw-bold text-dark">Bienvenido</h1>
+            
+            {% if form.errors %}
+                <div class="alert alert-danger small">Usuario o contraseña incorrectos.</div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3 text-start">
+                    <label class="form-label text-muted small fw-bold">USUARIO</label>
+                    {{ form.username }}
+                </div>
+                <div class="mb-4 text-start">
+                    <label class="form-label text-muted small fw-bold">CONTRASEÑA</label>
+                    {{ form.password }}
+                </div>
+                <button type="submit" class="btn btn-principal w-100 fw-bold">Ingresar al sistema</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* Le agregamos las clases de Bootstrap a los campos que Django genera automáticamente */
+    document.querySelector('input[name="username"]').classList.add('form-control');
+    document.querySelector('input[name="password"]').classList.add('form-control');
+</script>
+{% endblock %}

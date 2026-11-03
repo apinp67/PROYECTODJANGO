@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="tarjeta text-center">
+            {# Las vistas genéricas envían el registro a eliminar bajo el nombre "object" #}
+            <h1 class="h4 mb-3">¿Eliminar el producto <span class="text-danger">{{ object.nombre }}</span>?</h1>
+            <p class="text-muted">Esta acción no se puede deshacer.</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                <a href="{% url 'facturacion:producto_lista' %}" class="btn btn-outline-secondary">No, volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

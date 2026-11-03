@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="tarjeta">
+            <h1 class="h4 titulo-pagina mb-4">{{ titulo }}</h1>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.cedula.id_for_label }}">Cédula</label>
+                    {{ form.cedula }}
+                    {% for error in form.cedula.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="{{ form.nombres.id_for_label }}">Nombres</label>
+                        {{ form.nombres }}
+                        {% for error in form.nombres.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="{{ form.apellidos.id_for_label }}">Apellidos</label>
+                        {{ form.apellidos }}
+                        {% for error in form.apellidos.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="{{ form.email.id_for_label }}">Correo Electrónico</label>
+                        {{ form.email }}
+                        {% for error in form.email.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="{{ form.telefono.id_for_label }}">Teléfono</label>
+                        {{ form.telefono }}
+                        {% for error in form.telefono.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label" for="{{ form.direccion.id_for_label }}">Dirección</label>
+                    {{ form.direccion }}
+                    {% for error in form.direccion.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+
+                <button type="submit" class="btn btn-principal">{{ boton }}</button>
+                <a href="{% url 'facturacion:cliente_lista' %}" class="btn btn-outline-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

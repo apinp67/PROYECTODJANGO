@@ -1,0 +1,154 @@
+/* =====================================================================
+   estilos.css · Tema "Índigo & Coral"
+   Se carga DESPUÉS de Bootstrap, así que puede cambiar sus estilos.
+   Las variables se definen una sola vez y se usan con var(--nombre).
+   ===================================================================== */
+:root {
+    --indigo-900: #1b1a4b;      /* fondo del menú (oscuro) */
+    --indigo-700: #3730a3;      /* degradado del menú */
+    --indigo-600: #4f46e5;      /* color principal: botones, enlaces */
+    --indigo-500: #6366f1;      /* hover del color principal */
+    --indigo-50:  #eef2ff;      /* fondo suave para filas y encabezados */
+    --coral:      #ff6b6b;      /* color de acento: detalles y logo */
+    --texto:      #1f2340;      /* color de texto principal */
+    --texto-suave:#6b7194;      /* texto secundario */
+    --borde:      #e3e6f5;      /* líneas y bordes sutiles */
+    --radio:      16px;         /* redondeo de las tarjetas */
+}
+
+/* ---------- Base de la página ---------- */
+body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--texto);
+    background: linear-gradient(180deg, #f5f6ff 0%, #eef0fb 100%);   /* fondo con degradado suave */
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;                    /* con flex en columna... */
+    flex-direction: column;
+}
+main { flex: 1; }                     /* ...el main se estira y el footer queda siempre abajo */
+
+/* ---------- Menú superior ---------- */
+.barra {
+    background: linear-gradient(90deg, var(--indigo-900), var(--indigo-700));
+    box-shadow: 0 4px 18px rgba(27, 26, 75, .25);
+    border-bottom: 3px solid var(--coral);          /* línea coral bajo el menú */
+}
+.barra .navbar-brand { letter-spacing: .5px; font-size: 1.35rem; }
+.barra .text-warning { color: var(--coral) !important; }   /* "Tienda" del logo en coral */
+.barra .nav-link {
+    color: rgba(255, 255, 255, .78);
+    border-radius: 999px;                           /* enlaces tipo "píldora" */
+    padding: .4rem .95rem !important;
+    margin: 0 .1rem;
+    transition: background-color .2s, color .2s;
+}
+.barra .nav-link:hover { background-color: rgba(255, 255, 255, .14); color: #fff; }
+.barra .btn-light {                                 /* botón "Iniciar Sesión" */
+    background-color: var(--coral);
+    border-color: var(--coral);
+    color: #fff !important;
+    border-radius: 999px;
+}
+.barra .btn-light:hover { background-color: #ff8585; border-color: #ff8585; }
+.barra .btn-outline-light { border-radius: 999px; }
+
+/* ---------- Títulos de página ---------- */
+.titulo-pagina {
+    position: relative;
+    padding-bottom: 10px;
+    font-weight: 700;
+    color: var(--indigo-900);
+}
+.titulo-pagina::after {                             /* subrayado corto de color debajo del título */
+    content: "";
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 56px; height: 4px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--indigo-600), var(--coral));
+}
+
+/* ---------- Tarjetas (formularios, tablas, portada) ---------- */
+.tarjeta {
+    background-color: #fff;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(55, 48, 163, .08);   /* sombra suave con tinte índigo */
+}
+.tarjeta.p-0 { overflow: hidden; }                  /* que la tabla respete las esquinas redondeadas */
+
+/* ---------- Tablas ---------- */
+.table { --bs-table-hover-bg: var(--indigo-50); }
+.table thead th {
+    background-color: var(--indigo-50);             /* encabezado claro (antes era oscuro) */
+    color: var(--indigo-700);
+    text-transform: uppercase;
+    font-size: .74rem;
+    letter-spacing: .08em;
+    font-weight: 700;
+    border-bottom: 2px solid var(--borde);
+    padding: 14px 16px;
+}
+.table tbody td { padding: 14px 16px; border-color: var(--borde); }
+
+/* ---------- Botones ---------- */
+.btn { border-radius: 10px; font-weight: 600; transition: all .2s ease; }
+.btn-principal {                                    /* nuestro botón principal */
+    background: linear-gradient(135deg, var(--indigo-600), var(--indigo-500));
+    color: #fff;
+    border: 0;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, .35);
+}
+.btn-principal:hover, .btn-principal:focus {
+    color: #fff;
+    transform: translateY(-1px);                    /* se levanta un poquito al pasar el mouse */
+    box-shadow: 0 6px 16px rgba(79, 70, 229, .45);
+}
+.btn-outline-primary { color: var(--indigo-600); border-color: var(--indigo-600); }
+.btn-outline-primary:hover { background-color: var(--indigo-600); border-color: var(--indigo-600); color: #fff; }
+.btn-outline-secondary { color: var(--texto-suave); border-color: var(--borde); background: #fff; }
+.btn-outline-secondary:hover { background-color: var(--indigo-50); color: var(--indigo-700); border-color: var(--indigo-500); }
+
+/* ---------- Formularios ---------- */
+.form-label { font-weight: 600; color: var(--indigo-900); }
+.form-control, .form-select {
+    border: 1.5px solid var(--borde);
+    border-radius: 10px;
+    padding: .6rem .85rem;
+    background-color: #fafbff;
+}
+.form-control:focus, .form-select:focus {           /* resplandor al escribir en un campo */
+    border-color: var(--indigo-500);
+    background-color: #fff;
+    box-shadow: 0 0 0 .25rem rgba(99, 102, 241, .18);
+}
+.form-check-input:checked { background-color: var(--indigo-600); border-color: var(--indigo-600); }
+
+/* ---------- Etiquetas (badges) y alertas ---------- */
+.badge { border-radius: 999px; padding: .45em .85em; font-weight: 600; }
+.badge.bg-success   { background-color: #d9f7ec !important; color: #087a55; }   /* Activo */
+.badge.bg-secondary { background-color: #ececf4 !important; color: #6b7194; }   /* Inactivo */
+.badge.bg-warning   { background-color: #ffe9d6 !important; color: #b4540a !important; }
+.alert { border: 0; border-left: 5px solid; border-radius: 12px; box-shadow: 0 4px 14px rgba(0, 0, 0, .05); }
+.alert-success { background-color: #e6f8f1; border-left-color: #10b981; color: #065f46; }
+.alert-danger  { background-color: #ffecec; border-left-color: var(--coral); color: #991b1b; }
+
+/* ---------- Paginación ---------- */
+.page-link { color: var(--indigo-600); border-color: var(--borde); border-radius: 10px !important; margin: 0 3px; }
+.page-link:hover { background-color: var(--indigo-50); color: var(--indigo-700); }
+.page-item.active .page-link { background-color: var(--indigo-600); border-color: var(--indigo-600); color: #fff; }
+
+/* ---------- Lista de la portada ---------- */
+.list-group-item { border-color: var(--borde); }
+.list-group-item:first-child { border-top-left-radius: 10px; border-top-right-radius: 10px; }
+.list-group-item:last-child  { border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
+
+/* ---------- Pie de página ---------- */
+.pie {
+    background: var(--indigo-900);
+    color: #c7caf0;
+    font-size: .9rem;
+    border-top: 3px solid var(--coral);
+}
