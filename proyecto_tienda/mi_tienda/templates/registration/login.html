@@ -1,0 +1,35 @@
+{% extends "base.html" %}                             {# Hereda el diseño #}
+{% block titulo %}Ingresar{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">                   {# Columna angosta #}
+        <div class="tarjeta form-auth">               {# form-auth: aplica los estilos del CSS para estas cajas #}
+            <h1 class="h4 titulo-pagina mb-4">Ingresar</h1>
+
+            {% if form.errors %}                      {# Si el usuario o la clave estaban mal, form.errors tiene algo #}
+                <div class="alert alert-danger">Usuario o contraseña incorrectos.</div>
+            {% endif %}
+            {% if next %}                             {# next = la página que quería ver (la envía la vista ingresar) #}
+                <div class="alert alert-info">Inicia sesión para ver esa página.</div>
+            {% endif %}
+
+            <form method="post">                      {# POST a esta misma dirección: la vista ingresar revisa los datos #}
+                {% csrf_token %}                      {# Obligatorio #}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.username.id_for_label }}">Usuario</label>
+                    {{ form.username }}               {# Caja del usuario (la dibuja Django) #}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="{{ form.password.id_for_label }}">Contraseña</label>
+                    {{ form.password }}               {# Caja de contraseña: se ven puntos #}
+                </div>
+                {# Campo oculto: viaja en el POST para que la vista sepa a dónde volver después de entrar #}
+                <input type="hidden" name="next" value="{{ next }}">
+                <button type="submit" class="btn btn-principal w-100">Ingresar</button>   {# w-100: botón de todo el ancho #}
+            </form>
+            <p class="text-center small mt-3 mb-0">¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

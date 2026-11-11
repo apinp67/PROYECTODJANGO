@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}{{ venta }}{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta">
+    <div class="d-flex justify-content-between flex-wrap gap-2 mb-3">
+        <div>
+            <h1 class="h3 titulo-pagina mb-1">Factura · {{ venta }}</h1>
+            <div class="text-muted small">{{ venta.fecha_hora|date:"d/m/Y H:i" }} · Pago: {{ venta.get_tipo_pago_display }}</div>
+        </div>
+        <div class="text-end">
+            <div class="fw-semibold">{{ venta.cliente }}</div>                {# maestro → cliente (1:N) #}
+            <div class="text-muted small">Cédula {{ venta.cliente.cedula }}</div>
+        </div>
+    </div>
+
+    <table class="table align-middle">
+        <thead><tr><th>Producto</th><th class="text-end">Cantidad</th><th class="text-end">Precio</th><th class="text-end">Subtotal</th></tr></thead>
+        <tbody>
+            {% for detalle in venta.detalles.all %}   {# related_name="detalles": las filas de esta venta #}
+            <tr>
+                <td>{{ detalle.producto.nombre }}</td>
+                <td class="text-end">{{ detalle.cantidad }}</td>
+                <td class="text-end">${{ detalle.precio }}</td>              {# el precio GUARDADO, no el actual #}
+                <td class="text-end">${{ detalle.subtotal|floatformat:2 }}</td>   {# @property del modelo #}
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot class="totales">
+            <tr><td colspan="3" class="text-end">Subtotal</td><td class="text-end">${{ venta.subtotal }}</td></tr>
+            <tr><td colspan="3" class="text-end">IVA {{ iva_porcentaje|floatformat:0 }} %</td><td class="text-end">${{ venta.iva }}</td></tr>
+            <tr><td colspan="3" class="text-end fw-bold fs-5">Total</td><td class="text-end fw-bold fs-5">${{ venta.total }}</td></tr>
+        </tfoot>
+    </table>
+    <p class="text-muted small">Registrada por {{ venta.user|default:"—" }} · última modificación {{ venta.fecha_modificacion|date:"d/m/Y H:i" }}</p>
+
+    <div class="no-imprimir">
+        <button type="button" class="btn btn-principal" onclick="window.print()">Imprimir</button>
+        <a href="{% url 'facturacion:venta_editar' venta.pk %}" class="btn btn-outline-primary">Editar</a>
+        <a href="{% url 'facturacion:venta_lista' %}" class="btn btn-outline-secondary">Volver</a>
+    </div>
+</div>
+{% endblock %}

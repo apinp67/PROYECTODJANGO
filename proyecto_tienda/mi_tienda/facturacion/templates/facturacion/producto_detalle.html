@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block titulo %}{{ producto.nombre }}{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="tarjeta">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="foto-grande">
+                    {% else %}
+                        <div class="foto-grande d-grid text-muted" style="place-items:center;height:220px">Sin foto</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-7">
+                    <h1 class="h3 titulo-pagina">{{ producto.nombre }}</h1>
+                    <p class="text-muted">{{ producto.descripcion|default:"Sin descripción." }}</p>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item"><b>Marca:</b> {{ producto.marca.nombre }}</li>
+                        <li class="list-group-item"><b>Categorías:</b>
+                            {% for c in producto.categorias.all %}{{ c.nombre }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}</li>
+                        <li class="list-group-item"><b>Precio:</b> ${{ producto.precio }}</li>
+                        <li class="list-group-item"><b>Stock:</b> {{ producto.stock }} unidades</li>
+                        {# Campos que vienen del ModeloBase #}
+                        <li class="list-group-item small text-muted">Registrado por {{ producto.user|default:"—" }} ·
+                            creado {{ producto.fecha_creacion|date:"d/m/Y H:i" }} · modificado {{ producto.fecha_modificacion|date:"d/m/Y H:i" }}</li>
+                    </ul>
+                    <a href="{% url 'facturacion:producto_editar' producto.pk %}" class="btn btn-principal">Editar</a>
+                    <a href="{% url 'facturacion:producto_lista' %}" class="btn btn-outline-secondary">Volver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

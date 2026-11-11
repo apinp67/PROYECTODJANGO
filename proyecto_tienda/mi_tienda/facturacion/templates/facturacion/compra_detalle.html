@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}{{ compra }}{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta">
+    <div class="d-flex justify-content-between flex-wrap gap-2 mb-3">
+        <div>
+            <h1 class="h3 titulo-pagina mb-1">Compra · {{ compra }}</h1>
+            <div class="text-muted small">{{ compra.fecha_hora|date:"d/m/Y H:i" }} · Pago: {{ compra.get_tipo_pago_display }}</div>
+        </div>
+        <div class="text-end">
+            <div class="fw-semibold">{{ compra.proveedor }}</div>                {# maestro → proveedor (1:N) #}
+            <div class="text-muted small">RUC {{ compra.proveedor.ruc }}</div>
+        </div>
+    </div>
+
+    <table class="table align-middle">
+        <thead><tr><th>Producto</th><th class="text-end">Cantidad</th><th class="text-end">Costo unit.</th><th class="text-end">Subtotal</th></tr></thead>
+        <tbody>
+            {% for detalle in compra.detalles.all %}   {# related_name="detalles": las filas de esta venta #}
+            <tr>
+                <td>{{ detalle.producto.nombre }}</td>
+                <td class="text-end">{{ detalle.cantidad }}</td>
+                <td class="text-end">${{ detalle.precio }}</td>              {# el costo GUARDADO en la compra #}
+                <td class="text-end">${{ detalle.subtotal|floatformat:2 }}</td>   {# @property del modelo #}
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot class="totales">
+            <tr><td colspan="3" class="text-end">Subtotal</td><td class="text-end">${{ compra.subtotal }}</td></tr>
+            <tr><td colspan="3" class="text-end">IVA {{ iva_porcentaje|floatformat:0 }} %</td><td class="text-end">${{ compra.iva }}</td></tr>
+            <tr><td colspan="3" class="text-end fw-bold fs-5">Total</td><td class="text-end fw-bold fs-5">${{ compra.total }}</td></tr>
+        </tfoot>
+    </table>
+    <p class="text-muted small">Registrada por {{ compra.user|default:"—" }} · última modificación {{ compra.fecha_modificacion|date:"d/m/Y H:i" }}</p>
+
+    <div class="no-imprimir">
+        <button type="button" class="btn btn-principal" onclick="window.print()">Imprimir</button>
+        <a href="{% url 'facturacion:compra_editar' compra.pk %}" class="btn btn-outline-primary">Editar</a>
+        <a href="{% url 'facturacion:compra_lista' %}" class="btn btn-outline-secondary">Volver</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block titulo %}Inicio{% endblock %}
+
+{% block contenido %}
+<h1 class="h3 titulo-pagina mb-4">Panel de Mi Tienda</h1>
+
+<div class="row g-3 mb-4">                      {# 3 tarjetas con los números que calculó get_context_data #}
+    <div class="col-md-4"><div class="tarjeta">
+        <div class="text-muted small">Productos activos</div>
+        <div class="display-6 fw-bold">{{ total_productos }}</div>
+    </div></div>
+    <div class="col-md-4"><div class="tarjeta">
+        <div class="text-muted small">Ventas de hoy</div>
+        <div class="display-6 fw-bold">{{ ventas_hoy }}</div>
+    </div></div>
+    <div class="col-md-4"><div class="tarjeta">
+        <div class="text-muted small">Vendido hoy</div>
+        <div class="display-6 fw-bold">${{ vendido_hoy|floatformat:2 }}</div>
+    </div></div>
+</div>
+
+<div class="tarjeta">
+    <h2 class="h5">Productos con stock bajo</h2>
+    <ul class="list-group">
+        {% for producto in stock_bajo %}
+            <li class="list-group-item d-flex justify-content-between">
+                {{ producto.nombre }} <span class="badge bg-danger">{{ producto.stock }}</span>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-muted">Todo el inventario está bien.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

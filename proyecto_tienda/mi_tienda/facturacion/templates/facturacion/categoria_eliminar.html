@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titulo %}Eliminar categoría{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="tarjeta text-center">
+            <h1 class="h4 mb-3">¿Eliminar <span class="text-danger">{{ categoria }}</span>?</h1>
+            <p class="text-muted">Los productos NO se borran: solo se quita su relación con esta categoría.</p>
+            <form method="post">                      {# POST → DeleteView.form_valid() #}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                <a href="{% url 'facturacion:categoria_lista' %}" class="btn btn-outline-secondary">No, volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

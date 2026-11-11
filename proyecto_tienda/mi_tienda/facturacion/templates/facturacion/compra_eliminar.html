@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titulo %}Eliminar compra{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="tarjeta">
+            <h1 class="h4 mb-3">¿Eliminar la <span class="text-danger">{{ compra }}</span> de {{ compra.proveedor }}?</h1>
+            <p>Estos productos <b>saldrán del inventario</b> (el stock vuelve a como estaba antes de la compra):</p>
+            <ul>
+                {% for detalle in compra.detalles.all %}
+                    <li>{{ detalle.cantidad }} × {{ detalle.producto.nombre }}</li>
+                {% endfor %}
+            </ul>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                <a href="{% url 'facturacion:compra_detalle' compra.pk %}" class="btn btn-outline-secondary">No, volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

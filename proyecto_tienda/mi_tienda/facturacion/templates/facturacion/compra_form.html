@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+
+{% block contenido %}
+<h1 class="h3 titulo-pagina mb-3">{{ titulo }}{% if object %} #{{ object.pk }}{% endif %}</h1>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+
+    {# ================= 1. CABECERA (form = CompraForm) ================= #}
+    <div class="tarjeta mb-3">
+        <div class="row g-3">
+            {% for campo in form %}                   {# proveedor, fecha_hora, tipo_pago #}
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+                    {{ campo }}
+                    {% for error in campo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# ================= 2. DETALLE (detalles = DetalleCompraFormSet) ================= #}
+    <div class="tarjeta mb-3">
+        <h2 class="h5">Productos</h2>
+
+        {# management_form: 4 campos ocultos que le dicen a Django CUÁNTAS filas llegan. Sin él → error #}
+        {{ detalles.management_form }}
+
+        {% if detalles.non_form_errors %}             {# errores de TODAS las filas juntas (stock, mínimo 1) #}
+            <div class="alert alert-danger">{{ detalles.non_form_errors }}</div>
+        {% endif %}
+
+        <table class="table align-middle">
+            <thead><tr><th>Producto</th><th style="width:130px">Cantidad</th><th style="width:160px">Costo unitario</th><th style="width:90px">Quitar</th></tr></thead>
+            <tbody id="filas">
+                {% for fila in detalles %}            {# cada fila es un DetalleCompraForm #}
+                <tr>
+                    <td>
+                        {% for oculto in fila.hidden_fields %}{{ oculto }}{% endfor %}   {# id y venta (ocultos) #}
+                        {{ fila.producto }}
+                        {% for error in fila.producto.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </td>
+                    <td>
+                        {{ fila.cantidad }}
+                        {% for error in fila.cantidad.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </td>
+                    <td>                                {# el costo lo escribe la persona (en la venta lo pone la vista) #}
+                        {{ fila.precio }}
+                        {% for error in fila.precio.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </td>
+                    <td class="text-center">{{ fila.DELETE }}</td>   {# casilla: al guardar, esta fila se borra #}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {# Molde de una fila vacía. <template> no se muestra: JavaScript lo copia. __prefix__ se cambia por el número #}
+        <template id="fila-vacia">
+            <tr>
+                <td>{% for oculto in detalles.empty_form.hidden_fields %}{{ oculto }}{% endfor %}{{ detalles.empty_form.producto }}</td>
+                <td>{{ detalles.empty_form.cantidad }}</td>
+                <td>{{ detalles.empty_form.precio }}</td>
+                <td class="text-center">{{ detalles.empty_form.DELETE }}</td>
+            </tr>
+        </template>
+        <button type="button" id="agregar-fila" class="btn btn-sm btn-outline-secondary">+ Agregar producto</button>
+        <p class="text-muted small mt-2 mb-0">Escribe el costo unitario de cada producto. El IVA y el total se calculan al guardar.</p>
+    </div>
+
+    <button type="submit" class="btn btn-principal">{{ boton }}</button>
+    <a href="{% url 'facturacion:compra_lista' %}" class="btn btn-outline-secondary">Cancelar</a>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // TOTAL_FORMS es el campo oculto que dice cuántas filas hay. Su id es "id_detalles-TOTAL_FORMS"
+    const totalFilas = document.getElementById("id_{{ detalles.prefix }}-TOTAL_FORMS");
+
+    document.getElementById("agregar-fila").addEventListener("click", function () {
+        const numero = totalFilas.value;                                   // la nueva fila tendrá este número (0, 1, 2...)
+        const molde = document.getElementById("fila-vacia").innerHTML;     // copia el HTML del <template>
+        const nuevaFila = molde.replace(/__prefix__/g, numero);            // detalles-__prefix__-cantidad → detalles-2-cantidad
+        document.getElementById("filas").insertAdjacentHTML("beforeend", nuevaFila);   // la agrega al final de la tabla
+        totalFilas.value = parseInt(numero) + 1;                           // ahora hay una fila más
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="tarjeta">
+            <h1 class="h4 titulo-pagina mb-3">{{ titulo }}</h1>
+            {# Datos de la cuenta (vienen de User, solo lectura) #}
+            <p class="text-muted mb-4">Usuario: <b>{{ user.username }}</b>{% if user.email %} · {{ user.email }}{% endif %}</p>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% for campo in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+                        {{ campo }}
+                        {% for error in campo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-principal">{{ boton }}</button>
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

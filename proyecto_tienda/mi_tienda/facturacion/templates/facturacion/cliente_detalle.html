@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}{{ cliente }}{% endblock %}
+
+{% block contenido %}
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="tarjeta">
+            <h1 class="h4 titulo-pagina mb-3">{{ cliente }}</h1>
+            <ul class="list-group mb-3">
+                <li class="list-group-item"><b>Cédula:</b> {{ cliente.cedula }}</li>
+                <li class="list-group-item"><b>Correo:</b> {{ cliente.email|default:"—" }}</li>
+                <li class="list-group-item"><b>Teléfono:</b> {{ cliente.telefono|default:"—" }}</li>
+                <li class="list-group-item"><b>Dirección:</b> {{ cliente.direccion|default:"—" }}</li>
+                {# Campos que vienen del ModeloBase #}
+                <li class="list-group-item small text-muted">Registrado por {{ cliente.user|default:"—" }} · {{ cliente.fecha_creacion|date:"d/m/Y H:i" }}</li>
+            </ul>
+            <a href="{% url 'facturacion:cliente_editar' cliente.pk %}" class="btn btn-principal">Editar</a>
+            <a href="{% url 'facturacion:cliente_lista' %}" class="btn btn-outline-secondary">Volver</a>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="tarjeta p-0 table-responsive">
+            <h2 class="h5 p-3 pb-0">Ventas de este cliente</h2>
+            <table class="table table-hover align-middle m-0">
+                <thead><tr><th>N.º</th><th>Fecha</th><th>Pago</th><th class="text-end">Total</th><th class="text-end">Factura</th></tr></thead>
+                <tbody>
+                    {% for venta in cliente.ventas.all %}   {# related_name="ventas": todas las ventas del cliente (1:N) #}
+                    <tr>
+                        <td>{{ venta.pk }}</td>
+                        <td>{{ venta.fecha_hora|date:"d/m/Y H:i" }}</td>
+                        <td><span class="badge bg-light text-dark border">{{ venta.get_tipo_pago_display }}</span></td>
+                        <td class="text-end fw-semibold">${{ venta.total }}</td>
+                        <td class="text-end"><a href="{% url 'facturacion:venta_detalle' venta.pk %}" class="btn btn-sm btn-outline-success">Ver</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center text-muted py-4">Este cliente aún no tiene ventas.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
